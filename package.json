@@ -1,0 +1,15 @@
+{
+  "name": "airtasker",
+  "version": "1.0.0",
+  "description": "Airtasker Programming Challenge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hamed Afshar",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "hamedratelimiter": "file:hamedRateLimiter"
+  }
+}
