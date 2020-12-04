@@ -7,15 +7,14 @@ app.use(hamedRateLimiter({
 	interval: 5,
 	rateLimit: 2,
 	limiterKey: function(req) {
-		console.log(req.query.test);
-		return 'a'+req.query.test;
+		return req.ip;
 	}
 }));
 
 app.get('/', (req, res) => {
-	res.send('Hello World!');
+	res.send('Hello! This is the main API which is controlled by a customer rate limiter.');
 });
 
 app.listen(port, () => {
-	console.log(`Example app listening at http://localhost:${port}`);
+	console.log(`Airtasker app listening at http://localhost:${port}`);
 });

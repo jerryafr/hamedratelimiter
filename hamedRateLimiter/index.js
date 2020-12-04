@@ -11,7 +11,6 @@ options.limiterKey = function(req) {
 module.exports = function (overrideOptions) {
     options = {...options, ...overrideOptions};
     return async function (req, res, next) {
-        console.log(options);
         const r = await isRequestBlocked(options, req);
         if (r === false) {
             next();
@@ -23,6 +22,10 @@ module.exports = function (overrideOptions) {
     }
 }
 
+module.exports.getOptions = function () {
+    return options;
+}
+
 function isRequestBlocked(options, req) {
     const key = options.limiterKey(req);
     if (!(cache[key])) {
@@ -30,8 +33,6 @@ function isRequestBlocked(options, req) {
     }
     const bucket = cache[key];
     const currentTimestamp = getCurrentTimestamp();
-
-    console.log(cache);
 
     const newBucket = [];
     for (const item of bucket) {

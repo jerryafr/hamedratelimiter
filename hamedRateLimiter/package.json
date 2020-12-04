@@ -4,7 +4,7 @@
   "description": "Hamed Rate Limiter for expressjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Hamed Afshar",
   "license": "ISC"
