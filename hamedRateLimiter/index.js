@@ -1,7 +1,8 @@
-const cache = [];
+const cache = require('./cache');
+
 var options = {};
 
-options.interval = 30;
+options.interval = 3600;
 options.rateLimit = 100;
 options.limiterKey = function(req) {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -28,24 +29,24 @@ module.exports.getOptions = function () {
 
 function isRequestBlocked(options, req) {
     const key = options.limiterKey(req);
-    if (!(cache[key])) {
-        cache[key] = [];
+    if (!(cache.getItem(key))) {
+        cache.setItem(key, []);
     }
-    const bucket = cache[key];
+    const bucket = cache.getItem(key);
     const currentTimestamp = getCurrentTimestamp();
 
     const newBucket = [];
     for (const item of bucket) {
-        if (item.timestamp >= currentTimestamp - options.interval) {
+        if (item.timestamp >= currentTimestamp - options.interval * 1000) {
             // this item is not old and should keep it. otherwise, forget the item
             newBucket.push(item);
         }
     }
-    cache[key] = newBucket;
+    cache.setItem(key, newBucket);
 
     if (newBucket.length >= options.rateLimit) {
         // Reached the limit, we return the time required to unblock
-        return newBucket[0].timestamp - currentTimestamp + options.interval + 1;
+         return Math.ceil((newBucket[0].timestamp - currentTimestamp + options.interval * 1000) / 1000);
     }
 
     newBucket.push({timestamp: currentTimestamp});
@@ -53,5 +54,5 @@ function isRequestBlocked(options, req) {
 }
 
 function getCurrentTimestamp() {
-    return Math.floor(Date.now() / 1000);
+    return Math.floor(Date.now());
 }
